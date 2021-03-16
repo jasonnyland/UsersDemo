@@ -3,6 +3,8 @@ package com.example.usersdemo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,7 +18,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private EditText loginEmail;
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
@@ -35,6 +38,13 @@ public class MainActivity extends AppCompatActivity {
         loginPassword = findViewById(R.id.loginPassword);
         loginButton = findViewById(R.id.loginButton);
         registerButton = findViewById(R.id.registerButton);
+
+//        SharedPreferences sp = this.getSharedPreferences("Login", MODE_PRIVATE);
+//        String email = sp.getString("Email", null);
+//        String pass = sp.getString("Pass", null);
+//        if (email != null && pass != null) {
+//            signIn(email, pass);
+//        }
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -62,13 +72,15 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(MainActivity.this, "Registration succeded.",
+                            Toast.makeText(LoginActivity.this, "Registration succeded.",
                                     Toast.LENGTH_SHORT).show();
-                            //updateUI(user);
+                            saveCredentials(email,password);
+                            Intent intent = new Intent(LoginActivity.this, UserListActivity.class);
+                            startActivity(intent);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Registration failed.",
+                            Toast.makeText(LoginActivity.this, "Registration failed.",
                                     Toast.LENGTH_SHORT).show();
                             //updateUI(null);
                         }
@@ -85,17 +97,28 @@ public class MainActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(MainActivity.this, "Authentication succeded.",
+                            Toast.makeText(LoginActivity.this, "Authentication succeded.",
                                     Toast.LENGTH_SHORT).show();
+                            saveCredentials(email,password);
+                            Intent intent = new Intent(LoginActivity.this, UserListActivity.class);
+                            startActivity(intent);
                             //updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             //updateUI(null);
                         }
                     }
                 });
+    }
+
+    private void saveCredentials(String email, String pass) {
+        SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
+        SharedPreferences.Editor ed = sp.edit();
+        ed.putString("Email",email);
+        ed.putString("Pass",pass);
+        ed.commit();
     }
 }
