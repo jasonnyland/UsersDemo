@@ -4,10 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import org.w3c.dom.Text;
 
@@ -16,9 +19,11 @@ import java.util.List;
 public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView nameTextView;
+        public ImageView avatar;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-
+            avatar = itemView.findViewById(R.id.avatar);
             nameTextView = (TextView) itemView.findViewById(R.id.user_name);
         }
     }
@@ -47,6 +52,7 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
 
         TextView textView = holder.nameTextView;
         textView.setText(user.getName());
+        Picasso.get().load(user.getAvatar()).into(holder.avatar);
     }
 
     @Override
