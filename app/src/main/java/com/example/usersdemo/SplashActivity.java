@@ -46,9 +46,19 @@ public class SplashActivity extends AppCompatActivity {
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(SplashActivity.this, "Authentication succeded.",
                                     Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(SplashActivity.this, UserListActivity.class);
-                            startActivity(intent);
-                            SplashActivity.this.finish();
+                            SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
+                            String userName = sp.getString("Name", null);
+                            if (userName == null || userName.equals("")) {
+                                Intent intent = new Intent(SplashActivity.this, RegistrationActivity.class);
+                                startActivity(intent);
+                                SplashActivity.this.finish();
+                            } else {
+                                Intent intent = new Intent(SplashActivity.this, UserListActivity.class);
+                                startActivity(intent);
+                                SplashActivity.this.finish();
+                            }
+
+
                         } else {
                             // If sign in fails, display a message to the user.
                             goToLogin();

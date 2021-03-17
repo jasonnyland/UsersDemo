@@ -44,6 +44,11 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
                 ed.putString("Email", null);
                 ed.putString("Pass",null);
                 ed.commit();
+                SharedPreferences sp2 = getSharedPreferences("User", MODE_PRIVATE);
+                SharedPreferences.Editor ed2 = sp2.edit();
+                ed2.putString("Email", null);
+                ed2.putString("Name",null);
+                ed2.commit();
                 Intent intent = new Intent(UserListActivity.this, LoginActivity.class);
                 startActivity(intent);
                 UserListActivity.this.finish();
@@ -71,6 +76,17 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
                         user.setName(userData.getString("name"));
                         user.setEmail(userData.getString("email"));
                         users.add(user);
+                    }
+                    //check for logged in user details
+                    SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
+                    String userName = sp.getString("Name", null);
+                    String userEmail = sp.getString("Email", null);
+                    if (userName != null && !userName.equals("")) {
+                        User userMe = new User();
+                        userMe.setId(0);
+                        userMe.setName(userName);
+                        userMe.setEmail(userEmail);
+                        users.add(userMe);
                     }
                     UserListAdapter adapter = new UserListAdapter(users,UserListActivity.this::onListItemClicK);
                     userRecycler.setAdapter(adapter);

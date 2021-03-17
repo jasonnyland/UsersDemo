@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Registration succeded.",
                                     Toast.LENGTH_SHORT).show();
                             saveCredentials(email,password);
-                            Intent intent = new Intent(LoginActivity.this, UserListActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
                             startActivity(intent);
                             LoginActivity.this.finish();
                         } else {
@@ -94,9 +94,18 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "Authentication succeded.",
                                     Toast.LENGTH_SHORT).show();
                             saveCredentials(email,password);
-                            Intent intent = new Intent(LoginActivity.this, UserListActivity.class);
-                            startActivity(intent);
-                            LoginActivity.this.finish();
+                            SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
+                            String userName = sp.getString("Name", null);
+                            if (userName == null || userName.equals("")) {
+                                Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
+                                startActivity(intent);
+                                LoginActivity.this.finish();
+                            } else {
+                                Intent intent = new Intent(LoginActivity.this, UserListActivity.class);
+                                startActivity(intent);
+                                LoginActivity.this.finish();
+                            }
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
