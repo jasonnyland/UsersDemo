@@ -1,11 +1,14 @@
 package com.example.usersdemo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -21,7 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserListActivity extends AppCompatActivity {
+public class UserListActivity extends AppCompatActivity implements UserListAdapter.ListItemClickListener {
 
     private RecyclerView userRecycler;
     List<User> users;
@@ -52,7 +55,7 @@ public class UserListActivity extends AppCompatActivity {
                         user.setName(userData.getString("name"));
                         users.add(user);
                     }
-                    UserListAdapter adapter = new UserListAdapter(users);
+                    UserListAdapter adapter = new UserListAdapter(users,UserListActivity.this::onListItemClicK);
                     userRecycler.setAdapter(adapter);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -67,5 +70,11 @@ public class UserListActivity extends AppCompatActivity {
         });
 
         MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest);
+    }
+
+    @Override
+    public void onListItemClicK(int position) {
+        Intent intent = new Intent(UserListActivity.this, UserDetailsActivity.class);
+        startActivity(intent);
     }
 }
