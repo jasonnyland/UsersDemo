@@ -39,13 +39,6 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.loginButton);
         registerButton = findViewById(R.id.registerButton);
 
-//        SharedPreferences sp = this.getSharedPreferences("Login", MODE_PRIVATE);
-//        String email = sp.getString("Email", null);
-//        String pass = sp.getString("Pass", null);
-//        if (email != null && pass != null) {
-//            signIn(email, pass);
-//        }
-
         registerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String email = loginEmail.getText().toString();

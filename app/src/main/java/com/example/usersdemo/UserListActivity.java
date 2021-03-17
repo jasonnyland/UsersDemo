@@ -6,15 +6,18 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +30,7 @@ import java.util.List;
 public class UserListActivity extends AppCompatActivity implements UserListAdapter.ListItemClickListener {
 
     private RecyclerView userRecycler;
+    private FloatingActionButton logoutButton;
     List<User> users;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,11 +38,26 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
         setContentView(R.layout.activity_user_list);
         users = new ArrayList<>();
         userRecycler = findViewById(R.id.userRecycler);
+        logoutButton = findViewById(R.id.logoutButton);
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
+                SharedPreferences.Editor ed = sp.edit();
+                ed.putString("Email", null);
+                ed.putString("Pass",null);
+                ed.commit();
+                Intent intent = new Intent(UserListActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         userRecycler.setLayoutManager(linearLayoutManager);
         volleyRequest();
 
     }
+
 
 
     public void volleyRequest() {
