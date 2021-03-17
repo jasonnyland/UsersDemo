@@ -39,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.loginButton);
         registerButton = findViewById(R.id.registerButton);
 
+        //onclick for Register Button
         registerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String email = loginEmail.getText().toString();
@@ -47,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //onclick for Login Button
         loginButton.setOnClickListener(new View.OnClickListener() {
            public void onClick(View v) {
                String email = loginEmail.getText().toString();
@@ -55,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
            }
         });
     }
-
+    // register new account on firebase
     private void createAccount(String email, String password) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -81,21 +83,24 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
-
+    // authenticate with firebase
     private void signIn(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             Toast.makeText(LoginActivity.this, "Authentication succeded.",
                                     Toast.LENGTH_SHORT).show();
                             saveCredentials(email,password);
+
+                            // check for user details
                             SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
                             String userName = sp.getString("Name", null);
+
+                            // if no user details are saved, prompt for them, otherwise login
                             if (userName == null || userName.equals("")) {
                                 Intent intent = new Intent(LoginActivity.this, RegistrationActivity.class);
                                 startActivity(intent);
@@ -107,16 +112,16 @@ public class LoginActivity extends AppCompatActivity {
                             }
 
                         } else {
-                            // If sign in fails, display a message to the user.
+                            // If sign in fails, display a toast
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
                         }
                     }
                 });
     }
 
+    // save credentials to sharedpreferences for future auto-logins
     private void saveCredentials(String email, String pass) {
         SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
         SharedPreferences.Editor ed = sp.edit();

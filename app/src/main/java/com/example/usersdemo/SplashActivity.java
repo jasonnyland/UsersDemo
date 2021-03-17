@@ -26,6 +26,7 @@ public class SplashActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        // check for saved login information; if it exists, sign in automatically
         SharedPreferences sp = this.getSharedPreferences("Login", MODE_PRIVATE);
         String email = sp.getString("Email", null);
         String pass = sp.getString("Pass", null);
@@ -36,6 +37,7 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
+    // sign in function
     private void signIn(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

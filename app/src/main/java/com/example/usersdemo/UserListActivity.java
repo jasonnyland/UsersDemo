@@ -35,6 +35,7 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
     private RecyclerView userRecycler;
     private FloatingActionButton logoutButton;
     List<User> users;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +44,7 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
         userRecycler = findViewById(R.id.userRecycler);
         logoutButton = findViewById(R.id.logoutButton);
 
+        //onclick for logout button
         logoutButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 SharedPreferences sp = getSharedPreferences("Login", MODE_PRIVATE);
@@ -83,7 +85,6 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
         Intent intent = new Intent(UserListActivity.this,
                 UserListActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        //intent.putExtra("message", msg);
         PendingIntent pendingIntent = PendingIntent.getActivity(UserListActivity.this,
                 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(pendingIntent);
