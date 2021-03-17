@@ -49,6 +49,7 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
                 ed.commit();
                 Intent intent = new Intent(UserListActivity.this, LoginActivity.class);
                 startActivity(intent);
+                UserListActivity.this.finish();
             }
         });
 
