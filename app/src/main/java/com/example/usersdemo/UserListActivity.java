@@ -75,6 +75,9 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
     @Override
     public void onListItemClicK(int position) {
         Intent intent = new Intent(UserListActivity.this, UserDetailsActivity.class);
+        intent.putExtra("id", users.get(position).getId());
+        intent.putExtra("name", users.get(position).getName());
+        intent.putExtra("avatar", users.get(position).getAvatar());
         startActivity(intent);
     }
 }
