@@ -1,13 +1,19 @@
 package com.example.usersdemo;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,9 +64,32 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         userRecycler.setLayoutManager(linearLayoutManager);
         volleyRequest();
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("My Notification", "My Notification",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
 
     }
 
+    public void sendNotification() {
+        String msg = "Please Come Back!";
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(UserListActivity.this, "My Notification");
+        builder.setContentTitle("UsersDemo");
+        builder.setContentText(msg);
+        builder.setSmallIcon(android.R.drawable.stat_notify_error);
+        builder.setAutoCancel(true);
+        Intent intent = new Intent(UserListActivity.this,
+                UserListActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        //intent.putExtra("message", msg);
+        PendingIntent pendingIntent = PendingIntent.getActivity(UserListActivity.this,
+                0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        builder.setContentIntent(pendingIntent);
+        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(UserListActivity.this);
+        managerCompat.notify(1, builder.build());
+    }
 
     public void volleyRequest() {
         users = new ArrayList<>();
@@ -113,5 +142,15 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
         intent.putExtra("email", users.get(position).getEmail());
         intent.putExtra("avatar", users.get(position).getAvatar());
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent);
+        sendNotification();
     }
 }
