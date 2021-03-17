@@ -77,6 +77,7 @@ public class LoginActivity extends AppCompatActivity {
                             saveCredentials(email,password);
                             Intent intent = new Intent(LoginActivity.this, UserListActivity.class);
                             startActivity(intent);
+                            LoginActivity.this.finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
@@ -102,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                             saveCredentials(email,password);
                             Intent intent = new Intent(LoginActivity.this, UserListActivity.class);
                             startActivity(intent);
-                            //updateUI(user);
+                            LoginActivity.this.finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithEmail:failure", task.getException());

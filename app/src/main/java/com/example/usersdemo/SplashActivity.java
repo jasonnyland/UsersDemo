@@ -48,7 +48,7 @@ public class SplashActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(SplashActivity.this, UserListActivity.class);
                             startActivity(intent);
-                            //updateUI(user);
+                            SplashActivity.this.finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             goToLogin();
@@ -60,5 +60,6 @@ public class SplashActivity extends AppCompatActivity {
     private void goToLogin() {
         Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
         startActivity(intent);
+        this.finish();
     }
 }
