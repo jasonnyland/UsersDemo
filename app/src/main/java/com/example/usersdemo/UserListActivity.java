@@ -1,17 +1,15 @@
 package com.example.usersdemo;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -23,7 +21,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,7 +57,6 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
     }
 
 
-
     public void volleyRequest() {
         users = new ArrayList<>();
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET,
@@ -73,6 +69,7 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
                         User user = new User();
                         user.setId(userData.getInt("id"));
                         user.setName(userData.getString("name"));
+                        user.setEmail(userData.getString("email"));
                         users.add(user);
                     }
                     UserListAdapter adapter = new UserListAdapter(users,UserListActivity.this::onListItemClicK);
@@ -97,6 +94,7 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
         Intent intent = new Intent(UserListActivity.this, UserDetailsActivity.class);
         intent.putExtra("id", users.get(position).getId());
         intent.putExtra("name", users.get(position).getName());
+        intent.putExtra("email", users.get(position).getEmail());
         intent.putExtra("avatar", users.get(position).getAvatar());
         startActivity(intent);
     }
