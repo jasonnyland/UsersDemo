@@ -35,6 +35,7 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
     private RecyclerView userRecycler;
     private FloatingActionButton logoutButton;
     List<User> users;
+    boolean passing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,13 +146,32 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
         startActivity(intent);
     }
 
+//    @Override
+//    public void onBackPressed() {
+//        //super.onBackPressed();
+//        Intent intent = new Intent();
+//        intent.setAction(Intent.ACTION_MAIN);
+//        intent.addCategory(Intent.CATEGORY_HOME);
+//        startActivity(intent);
+//        sendNotification();
+//    }
+
+
     @Override
-    public void onBackPressed() {
-        //super.onBackPressed();
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        startActivity(intent);
-        sendNotification();
+    protected void onResume() {
+        passing = false;
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (!passing) sendNotification();
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        passing = true;
+        super.startActivity(intent);
     }
 }
