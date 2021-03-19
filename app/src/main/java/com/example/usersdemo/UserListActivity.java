@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class UserListActivity extends AppCompatActivity implements UserListAdapter.ListItemClickListener {
@@ -108,19 +109,7 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
                         user.setEmail(userData.getString("email"));
                         users.add(user);
                     }
-                    //check for logged in user details
-                    SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
-                    String userName = sp.getString("Name", null);
-                    String userEmail = sp.getString("Email", null);
-                    if (userName != null && !userName.equals("")) {
-                        User userMe = new User();
-                        userMe.setId(0);
-                        userMe.setName(userName);
-                        userMe.setEmail(userEmail);
-                        users.add(userMe);
-                    }
-                    UserListAdapter adapter = new UserListAdapter(users,UserListActivity.this::onListItemClicK);
-                    userRecycler.setAdapter(adapter);
+                    updateUser();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -146,21 +135,11 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
         startActivity(intent);
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        //super.onBackPressed();
-//        Intent intent = new Intent();
-//        intent.setAction(Intent.ACTION_MAIN);
-//        intent.addCategory(Intent.CATEGORY_HOME);
-//        startActivity(intent);
-//        sendNotification();
-//    }
-
-
     @Override
     protected void onResume() {
         passing = false;
         super.onResume();
+        updateUser();
     }
 
     @Override
@@ -174,4 +153,27 @@ public class UserListActivity extends AppCompatActivity implements UserListAdapt
         passing = true;
         super.startActivity(intent);
     }
+
+    public void updateUser() {
+        SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
+        String userName = sp.getString("Name", null);
+        String userEmail = sp.getString("Email", null);
+        if (userName != null && !userName.equals("")) {
+            User userMe = new User();
+            userMe.setId(0);
+            userMe.setName(userName);
+            userMe.setEmail(userEmail);
+            Iterator<User> iter = users.iterator();
+            while (iter.hasNext()) {
+                User u = iter.next();
+                if(u.getId() == 0) iter.remove();
+            }
+            users.add(userMe);
+        }
+
+        UserListAdapter adapterRefresh = new UserListAdapter(users,UserListActivity.this::onListItemClicK);
+        userRecycler.setAdapter(adapterRefresh);
+    }
+
+
 }
